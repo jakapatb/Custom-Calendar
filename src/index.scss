@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'Montserrat-Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Montserrat Regular'), local('Montserrat-Regular'),
+        url(https://fonts.gstatic.com/s/montserrat/v13/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2) format('woff2');
+}
+
+/* latin */
+@font-face {
+    font-family: 'Montserrat-Medium';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: local('Montserrat Medium'), local('Montserrat-Medium'),
+        url(https://fonts.gstatic.com/s/montserrat/v13/JTURjIg1_i6t8kCHKm45_ZpC3gnD_g.woff2) format('woff2');
+}
+
+body {
+    font-family: 'Montserrat-Medium';
+    color: #4a4a4a;
+}
