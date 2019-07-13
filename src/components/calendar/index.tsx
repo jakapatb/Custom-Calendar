@@ -2,14 +2,9 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 import styled from "styled-components";
 import HeaderSection from "./header";
+import DateSection from "./date";
 const Container = styled.div`
   font-size: 1.5rem;
-`;
-const DateWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 4.5rem 4.5rem 4.5rem 4.5rem 4.5rem 4.5rem 4.5rem;
-  background: #fff;
 `;
 const DateCell = styled.div`
   text-align: center;
@@ -35,6 +30,13 @@ const DateCell = styled.div`
     }
   }
 `;
+const DateWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 4.5rem 4.5rem 4.5rem 4.5rem 4.5rem 4.5rem 4.5rem;
+  background: #fff;
+`;
+
 const Day = styled.div`
   opacity: 0.34;
 
@@ -51,6 +53,7 @@ const DaysInWeek = () => (
     ))}
   </>
 );
+const mockEvent = [{ date: "2019-07-20", topic: "test", type: "test" }];
 
 const Calendar: React.FC = () => {
   const [select, setSelect] = useState(dayjs().date());
@@ -61,8 +64,10 @@ const Calendar: React.FC = () => {
 
   const blankDates = () => {
     let result: any = [];
-    let firstDay = dayjs()
-      .set("month", month).day()+1  
+    let firstDay =
+      dayjs()
+        .set("month", month)
+        .day() + 1;
     result = [...Array(firstDay)].map((_, index) => (
       <DateCell key={"blank" + index} />
     ));
@@ -76,7 +81,9 @@ const Calendar: React.FC = () => {
         <DaysInWeek />
         {blankDates()}
         {[...Array(lastDate)].map((_, index: number) => (
-          <DateCell>{index + 1}</DateCell>
+          <DateSection select={select} setSelect={setSelect}>
+            {index + 1}
+          </DateSection>
         ))}
       </DateWrapper>
     </Container>
