@@ -61,7 +61,10 @@ interface CalendarProps {
   calendarType?: CalendarType[];
 }
 
-const Calendar: React.FC<CalendarProps> = ({ events = [],calendarType=[] }) => {
+const Calendar: React.FC<CalendarProps> = ({
+  events = [],
+  calendarType = []
+}) => {
   const [select, setSelect] = useState(dayjs().date());
   const [month, setMonth] = useState(dayjs().month());
   const [infoDate, setInfoDate] = useState([] as Event[]);
@@ -83,30 +86,32 @@ const Calendar: React.FC<CalendarProps> = ({ events = [],calendarType=[] }) => {
   const mappingDates = () => {
     let groupType = _.groupBy(events, "type");
     let formatEvents = {};
+    // * this will ez if event have ID
     _.forEach(groupType, (valueType, type) => {
       let groupTopic = _.groupBy(valueType, "topic");
-      /* console.log(groupTopic); */
       let addedStyle: { [x: string]: FormatEvent[] } = {};
       _.forEach(groupTopic, (value, topic) => {
-        addedStyle[topic] = value.map((e, index) => {
-          let styleType;
-          switch (index) {
-            case 0:
-              styleType = "first";
-              break;
-            case value.length - 1:
-              styleType = "last";
-              break;
-            default:
-              styleType = "mid";
-              break;
-          }
-          if (value.length === 1) styleType = "single";
-          return {
-            ...e,
-            styleType
-          };
-        });
+        addedStyle[topic] = value
+          .sort((a, b) => dayjs(a.date).date() - dayjs(b.date).date())
+          .map((e, index) => {
+            let styleType = "none";
+            switch (index) {
+              case 0:
+                styleType = "first";
+                break;
+              case value.length - 1:
+                styleType = "last";
+                break;
+              default:
+                styleType = "mid";
+                break;
+            }
+            if (value.length === 1) styleType = "single";
+            return {
+              ...e,
+              styleType
+            };
+          });
       });
       formatEvents = { ...formatEvents, [type]: addedStyle };
     });
@@ -142,7 +147,9 @@ const Calendar: React.FC<CalendarProps> = ({ events = [],calendarType=[] }) => {
         {mappingDates()}
       </DateWrapper>
       {infoDate.map(event => (
-        <p>{event.topic}</p>
+        <p>
+          {event.type} {event.topic}
+        </p>
       ))}
     </Container>
   );

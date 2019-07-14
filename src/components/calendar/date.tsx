@@ -118,12 +118,20 @@ const DateSection: React.FC<DateProps> = ({
                 color={calendarType[0].color}
               />
             );
-          default:
+          case calendarType[1].name:
             return (
               <SecondaryEvent
                 key={index}
                 styleType={event.find(el => el.type === calendarType[1].name)}
                 color={calendarType[1].color}
+              />
+            );
+          default:
+            return (
+              <SecondaryEvent
+                key={index}
+                styleType={event.find(el => el.type === calendarType[2].name)}
+                color={calendarType[2].color}
               />
             );
         }
