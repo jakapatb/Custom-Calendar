@@ -2,6 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 import styled from "styled-components";
 import { FormatEvent, CalendarType } from "../../type/calendar";
+import _ from "lodash";
 const DateCell = styled.div`
   position: relative;
   text-align: center;
@@ -46,7 +47,7 @@ const SecondaryEvent = styled.div<any>`
   border-radius: 3.125rem;
   ${({ styleType, color }) => {
     let result = `background: ${color};`;
-    switch (styleType.styleType) {
+    switch (styleType) {
       case "first":
         return result + ` border-radius:3.125rem 0 0 3.125rem; width:100%;`;
       case "last":
@@ -69,7 +70,7 @@ const PrimaryEvent = styled.div<any>`
   border-radius: 3.125rem;
   ${({ styleType, color }) => {
     let result = `background: ${color};`;
-    switch (styleType.styleType) {
+    switch (styleType) {
       case "first":
         return result + ` border-radius:3.125rem 0 0 3.125rem; width:100%;`;
       case "last":
@@ -109,29 +110,22 @@ const DateSection: React.FC<DateProps> = ({
       {dayjs().date() === children && <TodayNode />}
       {select === children && <SelectNode />}
       {event.map((el, index) => {
+        const objectType = _.mapValues(_.keyBy(calendarType, "name"), "color");
         switch (el.type) {
           case calendarType[0].name:
             return (
               <PrimaryEvent
                 key={index}
-                styleType={event.find(el => el.type === calendarType[0].name)}
-                color={calendarType[0].color}
-              />
-            );
-          case calendarType[1].name:
-            return (
-              <SecondaryEvent
-                key={index}
-                styleType={event.find(el => el.type === calendarType[1].name)}
-                color={calendarType[1].color}
+                styleType={el.styleType}
+                color={objectType[el.type]}
               />
             );
           default:
             return (
               <SecondaryEvent
                 key={index}
-                styleType={event.find(el => el.type === calendarType[2].name)}
-                color={calendarType[2].color}
+                styleType={el.styleType}
+                color={objectType[el.type]}
               />
             );
         }

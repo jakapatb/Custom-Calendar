@@ -16,12 +16,14 @@ const mockEvent = [
   { date: "2019-07-22", topic: "none", type: "secondary" },
   { date: "2019-07-23", topic: "none5", type: "etc" },
   { date: "2019-07-21", topic: "none5", type: "etc" },
-  { date: "2019-07-22", topic: "none5", type: "etc" }
+  { date: "2019-07-22", topic: "none5", type: "etc" },
+  { date: "2019-07-23", topic: "no", type: "ete2" }
 ];
 const mockCalendarType = [
   {name:'primary' , color:'#4B4B4B'},
   {name:'secondary', color:'#7D7D7D'},
-  {name:'etc', color:'#55c2ac'}
+  {name:'etc', color:'#55c2ac'},
+  {name:'etc2', color:'#55c244'}
 ]
 const App: React.FC = () => {
   return (
