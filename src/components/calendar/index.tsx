@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import styled from "styled-components";
 import HeaderSection from "./header";
 import DateSection from "./date";
+import { Event, FormatEvent, CalendarType } from "../../type/calendar";
+import _ from "lodash";
 const Container = styled.div`
   font-size: 1.5rem;
 `;
@@ -53,11 +55,16 @@ const DaysInWeek = () => (
     ))}
   </>
 );
-const mockEvent = [{ date: "2019-07-20", topic: "test", type: "test" }];
 
-const Calendar: React.FC = () => {
+interface CalendarProps {
+  events?: Event[];
+  calendarType?: CalendarType[];
+}
+
+const Calendar: React.FC<CalendarProps> = ({ events = [],calendarType=[] }) => {
   const [select, setSelect] = useState(dayjs().date());
   const [month, setMonth] = useState(dayjs().month());
+  const [infoDate, setInfoDate] = useState([] as Event[]);
   const lastDate = dayjs()
     .set("month", month)
     .daysInMonth();
@@ -73,19 +80,70 @@ const Calendar: React.FC = () => {
     ));
     return result;
   };
+  const mappingDates = () => {
+    let groupType = _.groupBy(events, "type");
+    let formatEvents = {};
+    _.forEach(groupType, (valueType, type) => {
+      let groupTopic = _.groupBy(valueType, "topic");
+      /* console.log(groupTopic); */
+      let addedStyle: { [x: string]: FormatEvent[] } = {};
+      _.forEach(groupTopic, (value, topic) => {
+        addedStyle[topic] = value.map((e, index) => {
+          let styleType;
+          switch (index) {
+            case 0:
+              styleType = "first";
+              break;
+            case value.length - 1:
+              styleType = "last";
+              break;
+            default:
+              styleType = "mid";
+              break;
+          }
+          if (value.length === 1) styleType = "single";
+          return {
+            ...e,
+            styleType
+          };
+        });
+      });
+      formatEvents = { ...formatEvents, [type]: addedStyle };
+    });
+    const resultEvents = _.map(formatEvents, e => _.map(e))
+      .flat()
+      .flat();
+    console.log(resultEvents);
+    return [...Array(lastDate)].map((e, index: number) => {
+      const date = index + 1;
 
+      return (
+        <DateSection
+          key={date}
+          select={select}
+          setSelect={setSelect}
+          setInfoDate={setInfoDate}
+          calendarType={calendarType}
+          event={resultEvents.filter(
+            event => dayjs(event.date).date() === date
+          )}
+        >
+          {date}
+        </DateSection>
+      );
+    });
+  };
   return (
     <Container>
       <HeaderSection month={month} setMonth={setMonth} />
       <DateWrapper>
         <DaysInWeek />
         {blankDates()}
-        {[...Array(lastDate)].map((_, index: number) => (
-          <DateSection select={select} setSelect={setSelect}>
-            {index + 1}
-          </DateSection>
-        ))}
+        {mappingDates()}
       </DateWrapper>
+      {infoDate.map(event => (
+        <p>{event.topic}</p>
+      ))}
     </Container>
   );
 };
