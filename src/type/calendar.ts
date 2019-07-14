@@ -4,8 +4,6 @@ export interface Event {
   type: string;
 }
 
-export type StyleEvent = "first" | "mid" | "last" | "single";
-
 export interface FormatEvent {
   date: string;
   topic: string;
